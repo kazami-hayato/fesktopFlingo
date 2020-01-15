@@ -1,0 +1,14 @@
+C:\Users\23303\source\repos\FlingoDesktop\FlingoDesktop\bin\Debug\FlingoDesktop.exe.config
+C:\Users\23303\source\repos\FlingoDesktop\FlingoDesktop\bin\Debug\FlingoDesktop.exe
+C:\Users\23303\source\repos\FlingoDesktop\FlingoDesktop\bin\Debug\FlingoDesktop.pdb
+C:\Users\23303\source\repos\FlingoDesktop\FlingoDesktop\obj\Debug\FlingoDesktop.csprojAssemblyReference.cache
+C:\Users\23303\source\repos\FlingoDesktop\FlingoDesktop\obj\Debug\MainWindow.g.cs
+C:\Users\23303\source\repos\FlingoDesktop\FlingoDesktop\obj\Debug\App.g.cs
+C:\Users\23303\source\repos\FlingoDesktop\FlingoDesktop\obj\Debug\FlingoDesktop_MarkupCompile.cache
+C:\Users\23303\source\repos\FlingoDesktop\FlingoDesktop\obj\Debug\FlingoDesktop_MarkupCompile.lref
+C:\Users\23303\source\repos\FlingoDesktop\FlingoDesktop\obj\Debug\MainWindow.baml
+C:\Users\23303\source\repos\FlingoDesktop\FlingoDesktop\obj\Debug\FlingoDesktop.g.resources
+C:\Users\23303\source\repos\FlingoDesktop\FlingoDesktop\obj\Debug\FlingoDesktop.Properties.Resources.resources
+C:\Users\23303\source\repos\FlingoDesktop\FlingoDesktop\obj\Debug\FlingoDesktop.csproj.GenerateResource.cache
+C:\Users\23303\source\repos\FlingoDesktop\FlingoDesktop\obj\Debug\FlingoDesktop.exe
+C:\Users\23303\source\repos\FlingoDesktop\FlingoDesktop\obj\Debug\FlingoDesktop.pdb
