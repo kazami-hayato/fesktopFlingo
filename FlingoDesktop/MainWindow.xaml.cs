@@ -15,14 +15,34 @@ using System.Windows.Shapes;
 using System.Net.Http;
 using System.Net;
 using System.IO;
+using System.Windows.Forms;
+using Newtonsoft.Json;
+using System.Threading;
+using System.ComponentModel;
 
 namespace FlingoDesktop
 {
     /// <summary>
     /// MainWindow.xaml 的交互逻辑
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, INotifyPropertyChanged
     {
+        private int currentProgress = 0;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        public void OnPropertyChanged(string PropertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(PropertyName));
+        }
+        public int CurrentProgress
+        {
+            get { return currentProgress; }
+            set
+            {
+                currentProgress = value;
+                OnPropertyChanged("CurrentProgress");
+            }
+        }
         public MainWindow()
         {
             InitializeComponent();
@@ -98,6 +118,132 @@ namespace FlingoDesktop
             }
         }
 
-   
+
+
+        private void openVideoFolder(object sender, RoutedEventArgs e)
+        {
+            FolderBrowserDialog m_Dialog = new FolderBrowserDialog();
+            DialogResult result = m_Dialog.ShowDialog();
+
+            if (result == System.Windows.Forms.DialogResult.Cancel)
+            {
+                return;
+            }
+            string m_Dir = m_Dialog.SelectedPath.Trim();
+            this.videoFolder.Text = m_Dir;
+            m_Dialog.Dispose();
+        }
+
+        private void openVideoFile(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Title = "选择视频汇总csv文件";
+            openFileDialog.Filter = "csv文件|*.csv";
+            openFileDialog.FileName = string.Empty;
+            openFileDialog.FilterIndex = 1;
+            openFileDialog.Multiselect = false;
+            openFileDialog.RestoreDirectory = true;
+            openFileDialog.DefaultExt = "csv";
+            DialogResult result = openFileDialog.ShowDialog();
+            if (result == System.Windows.Forms.DialogResult.OK)
+            {
+                this.videoFile.Text = openFileDialog.FileName;
+            }
+            openFileDialog.Dispose();
+        }
+        //  private delegate void UpdateProgressBarDelegate(DependencyProperty dp, object value);
+        private async void genBatchData(object sender, RoutedEventArgs e)
+        {
+            var video_dir = this.videoFile.Text;
+            var files_dir = this.videoFolder.Text;
+            Console.WriteLine(video_dir);
+            Console.WriteLine(files_dir);
+            var rets = ProcessCsv.readCsv(video_dir, files_dir, logText);
+            int nums = rets.Count();
+            string url = this.urlText.Text.Trim();
+            //  Console.WriteLine(nums);
+            string extralog = "";
+            Action action = () =>
+            {
+
+                for (int i = 0; i < nums; ++i)
+                {
+                    CurrentProgress = 100 * ((i + 1) / nums);
+                    ret tempret = rets[i];
+                    var httpWebRequest = (HttpWebRequest)WebRequest.Create("https://www.hbuvt.com/apis/v1/system/courses");
+                    httpWebRequest.ContentType = "application/json";
+                    httpWebRequest.Method = "POST";
+                    using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+                    {
+                        //tempret.course_id = "test_" + tempret.course_id;
+                        string json = JsonConvert.SerializeObject(tempret);
+                        streamWriter.Write(json);
+                    }
+                    try
+                    {
+                        var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+                        using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                        {
+                            var result = streamReader.ReadToEnd();
+                            Console.WriteLine(result);
+                        }
+                    }
+                    catch (System.Net.WebException ex)
+                    {
+                        Console.WriteLine(ex);
+                        extralog += "\n" + "已经存在:" + tempret.course_id;
+                    }
+                    Thread.Sleep(100);
+                }
+            };
+            await Task.Run(action);
+            this.logText.Text += extralog;
+        }
+
+        private void openCatFile(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Title = "选择单个课程视频xlsx文件";
+            openFileDialog.Filter = "xlsx文件|*.xlsx";
+            openFileDialog.FileName = string.Empty;
+            openFileDialog.FilterIndex = 1;
+            openFileDialog.Multiselect = false;
+            openFileDialog.RestoreDirectory = true;
+            openFileDialog.DefaultExt = "xlsx";
+            DialogResult result = openFileDialog.ShowDialog();
+            if (result == System.Windows.Forms.DialogResult.OK)
+            {
+                this.catFile.Text = openFileDialog.FileName;
+            }
+            openFileDialog.Dispose();
+        }
+
+        private void openVidFile(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Title = "选择视频汇总csv文件";
+            openFileDialog.Filter = "csv文件|*.csv";
+            openFileDialog.FileName = string.Empty;
+            openFileDialog.FilterIndex = 1;
+            openFileDialog.Multiselect = false;
+            openFileDialog.RestoreDirectory = true;
+            openFileDialog.DefaultExt = "csv";
+            DialogResult result = openFileDialog.ShowDialog();
+            if (result == System.Windows.Forms.DialogResult.OK)
+            {
+                this.vidFile.Text = openFileDialog.FileName;
+            }
+            openFileDialog.Dispose();
+        }
+
+        private void genSingleData(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void urlText_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+        }
     }
 }

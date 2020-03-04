@@ -3,20 +3,114 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:local="clr-namespace:FlingoDesktop"
+          x:Name="mywindow"
         mc:Ignorable="d"
         Title="网络学习后台数据库备份软件" Height="450" Width="800">
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="8*"/>
-            <ColumnDefinition/>
-        </Grid.ColumnDefinitions>
-            
-        <Label Content="备份数据库" HorizontalAlignment="Left" Margin="116,82.106,0,0" VerticalAlignment="Top" FontSize="24"/>
-        <Button Content="开始备份数据库" HorizontalAlignment="Left" Margin="280,85.106,0,0" VerticalAlignment="Top" Width="199" FontSize="24" Click="backupSql"/>
-        <Label Content="备份学生照片" HorizontalAlignment="Left" Margin="116,154,0,0" VerticalAlignment="Top" FontSize="24" Width="159"/>
-        <Button Content="开始备份照片" HorizontalAlignment="Left" Margin="280,157,0,0" VerticalAlignment="Top" Width="199" FontSize="24" Click="backupStatic"/>
-        <Label Content="设置请求IP" HorizontalAlignment="Left" Margin="118.263,10,0,0" VerticalAlignment="Top" FontSize="24"/>
-        <TextBox Name="urlText" HorizontalAlignment="Left" Height="40" Margin="280,14,0,0" TextWrapping="Wrap" Text="114.215.174.187"  VerticalAlignment="Top" Width="198.258" FontSize="24"/>
-    </Grid>
+    <TabControl TabStripPlacement="Left" Margin="0, 0, 0, 10">
+        <TabItem Name="database" Header="数据库备份">
+            <TabItem.Background>
+                <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                    <GradientStop Color="#FFF0F0F0" Offset="0"/>
+                    <GradientStop Color="White" Offset="1"/>
+                </LinearGradientBrush>
+            </TabItem.Background>
+            <TabItem.Content>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="8*"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+
+                    <Label Content="备份数据库" HorizontalAlignment="Left" Margin="116,82.106,0,0" VerticalAlignment="Top" FontSize="24"/>
+                    <Button Content="开始备份数据库" HorizontalAlignment="Left" Margin="280,85.106,0,0" VerticalAlignment="Top" Width="199" FontSize="24" Click="backupSql" Height="35.48"/>
+                    <Label Content="备份学生照片" HorizontalAlignment="Left" Margin="116,154,0,0" VerticalAlignment="Top" FontSize="24" Width="159"/>
+                    <Button Content="开始备份照片" HorizontalAlignment="Left" Margin="280,157,0,0" VerticalAlignment="Top" Width="199" FontSize="24" Click="backupStatic" Height="35.48"/>
+                    <Label Content="设置请求IP" HorizontalAlignment="Left" Margin="118.263,10,0,0" VerticalAlignment="Top" FontSize="24"/>
+                    <TextBox Name="urlText" HorizontalAlignment="Left" Height="40" Margin="280,14,0,0" TextWrapping="Wrap" Text="114.215.174.187"  VerticalAlignment="Top" Width="198.258" FontSize="24" TextChanged="urlText_TextChanged"/>
+                </Grid>
+            </TabItem.Content>
+        </TabItem>
+
+        <TabItem Name="course" Header="生成课程目录" IsSelected="True">
+            <TabItem.Background>
+                <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                    <GradientStop Color="#FFF0F0F0" Offset="0"/>
+                    <GradientStop Color="White" Offset="1"/>
+                </LinearGradientBrush>
+            </TabItem.Background>
+            <TabItem.Content>
+                <Grid>
+                    <TabControl HorizontalAlignment="Left" Height="403" VerticalAlignment="Top" Width="700">
+                        <TabItem IsSelected="True" Width="300" Background="White" BorderBrush="{x:Null}" Foreground="{x:Null}" Height="21" Margin="0,-2,0,0" VerticalAlignment="Bottom">
+                            <TabItem.Header>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="批量处理" Foreground="Black" />
+                                </StackPanel>
+                            </TabItem.Header>
+                            <TabItem.Content>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="176*"/>
+                                        <ColumnDefinition Width="58*"/>
+                                        <ColumnDefinition Width="150*"/>
+                                        <ColumnDefinition Width="104*"/>
+                                        <ColumnDefinition Width="207*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Button Content="打开课程目录文件夹" Margin="22,48,32,294" Grid.ColumnSpan="2" Click="openVideoFolder" FontSize="16"></Button>
+                                    <TextBlock TextWrapping = "Wrap" Name="videoFolder" Text="课程目录这里显示" Grid.Column="1" Margin="46,52,74,263" FontSize="14" Grid.ColumnSpan="4" Foreground="Black"/>
+                                    <Button Content="打开视频表格文件" Grid.ColumnSpan="2" Margin="22,135,32,207" Click="openVideoFile"></Button>
+                                    <TextBlock TextWrapping = "Wrap" Name="videoFile" Text="这里显示视频表格文件路径"  Margin="46,135,74,174" RenderTransformOrigin="0.573,0.648" Grid.Column="1" FontSize="14" Grid.ColumnSpan="4" Foreground="Black"/>
+                                    <Button Content="生成批量课程数据" Grid.Column="1" Margin="46,205,90,137" Click="genBatchData" Grid.ColumnSpan="3"></Button>
+                                    <ProgressBar x:Name="batchProgress" Minimum="0" Maximum="100" Grid.ColumnSpan="4" 
+                                                  Value="{Binding CurrentProgress, ElementName=mywindow, Mode=OneWay}"
+                                                 Margin="167,269,41,88" Height="Auto" RenderTransformOrigin="0.5,0.5" Background="#FF1C93EC" SmallChange="0"  IsIndeterminate="False" Foreground="#FF77C585">
+                                        <ProgressBar.RenderTransform>
+                                            <TransformGroup>
+                                                <ScaleTransform ScaleY="-1"/>
+                                                <SkewTransform/>
+                                                <RotateTransform/>
+                                                <TranslateTransform/>
+                                            </TransformGroup>
+                                        </ProgressBar.RenderTransform>
+                                    </ProgressBar>
+                                </Grid>
+                            </TabItem.Content>
+                        </TabItem>
+                        <TabItem Width="300" Background="White" BorderBrush="{x:Null}" Foreground="{x:Null}">
+                            <TabItem.Header>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="单独处理" Foreground="Black" />
+                                </StackPanel>
+                            </TabItem.Header>
+                            <TabItem.Content>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="93*"/>
+                                        <ColumnDefinition Width="83*"/>
+                                        <ColumnDefinition Width="518*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Button Content="打开单个课程目录文件" Margin="36,46,462,296" Grid.ColumnSpan="3" Click="openCatFile" FontSize="16"></Button>
+                                    <TextBlock TextWrapping = "Wrap" Name="catFile" Text="这里显示单个视频文件路径" Grid.Column="2" Margin="82,50,94,261" FontSize="14" Foreground="Black"/>
+                                    <Button Content="打开视频表格文件" Grid.ColumnSpan="3" Margin="36,135,462,207" Click="openVidFile"></Button>
+                                    <TextBlock Name="vidFile" TextWrapping = "Wrap" Text="这里显示视频表格文件路径"  Margin="82,135,94,184" RenderTransformOrigin="0.573,0.648" Grid.Column="2" FontSize="14" Foreground="Black"/>
+                                    <Button Content="生成单个课程数据" Grid.Column="2" Margin="46,218,296,124" Click="genSingleData"></Button>
+                                </Grid>
+                            </TabItem.Content>
+                        </TabItem>
+
+                    </TabControl>
+                </Grid>
+            </TabItem.Content>
+        </TabItem>
+        <TabItem Name="log" Header="日志">
+            <Grid>
+                <TextBox Name="logText" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+         ScrollViewer.VerticalScrollBarVisibility="Auto" />
+            </Grid>
+        </TabItem>
+
+    </TabControl>
+
 </Window>

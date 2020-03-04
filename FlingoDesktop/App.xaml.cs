@@ -5,7 +5,6 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
-
 namespace FlingoDesktop
 {
     /// <summary>
@@ -13,5 +12,6 @@ namespace FlingoDesktop
     /// </summary>
     public partial class App : Application
     {
+
     }
 }
